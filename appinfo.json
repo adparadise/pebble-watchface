@@ -1,0 +1,26 @@
+{
+  "uuid": "22f72674-6d84-4e1b-a678-11c29c618ce9",
+  "shortName": "hello-watchface",
+  "longName": "hello-watchface",
+  "companyName": "AndrewParadise",
+  "versionCode": 1,
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite", "basalt"],
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": [
+        {
+            "type": "font",
+            "name": "FONT_ROBOTO_BOLD_52",
+            "file": "fonts/roboto-bold.ttf",
+            "compatability": "2.7"
+        }
+    ]
+  }
+}
