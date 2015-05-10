@@ -11,7 +11,10 @@
     "watchface": true
   },
   "appKeys": {
-    "dummy": 0
+    "KEY_TEMPERATURE": 0,
+    "KEY_CONDITIONS": 1,
+    "KEY_LOG": 2,
+    "KEY_PING": 3
   },
   "resources": {
     "media": [
@@ -20,7 +23,16 @@
             "name": "FONT_ROBOTO_BOLD_52",
             "file": "fonts/roboto-bold.ttf",
             "compatability": "2.7"
+        },
+        {
+            "type": "font",
+            "name": "FONT_ROBOTO_BOLD_32",
+            "file": "fonts/roboto-bold.ttf",
+            "compatability": "2.7"
         }
     ]
-  }
+  },
+  "capabilities": [
+    "location"
+  ]
 }
