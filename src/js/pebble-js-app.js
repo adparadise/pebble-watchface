@@ -38,9 +38,7 @@ function clearScreen () {
         appLog(':( clear');
     }
 
-    function successHandler (event) {
-        appLog('');
-    }
+    function successHandler (event) {}
 }
 
 function locationSuccess (pos) {
@@ -152,6 +150,7 @@ function locationError(err) {
 }
 
 function getWeather() {
+    clearScreen();
     appLog('location...');
 
     navigator.geolocation.getCurrentPosition(

@@ -94,7 +94,7 @@ static void create_weather_status_layer(Layer *parent_layer) {
   int coord_height = 15;
   s_weather_status_layer = layer_create(GRect(0, 84, 144, 84));
 
-  s_weather_status_text = text_layer_create(GRect(0, 46, 144, 25));
+  s_weather_status_text = text_layer_create(GRect(0, 56, 144, 25));
   text_layer_set_background_color(s_weather_status_text, GColorClear);
   text_layer_set_text_color(s_weather_status_text, GColorWhite);
   text_layer_set_text_alignment(s_weather_status_text, GTextAlignmentCenter);
@@ -124,18 +124,19 @@ static void create_weather_status_layer(Layer *parent_layer) {
 }
 
 static void create_weather_layer(Layer *parent_layer) {
-  s_temperature_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_BOLD_32));
+  int gutter = 16;
+  s_temperature_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_BOLD_26));
 
-  s_temperature_layer = text_layer_create(GRect(72, 100, 68, 35));
+  s_temperature_layer = text_layer_create(GRect(72 + gutter / 2, 105, 72 - gutter, 30));
   text_layer_set_background_color(s_temperature_layer, GColorClear);
   text_layer_set_text_color(s_temperature_layer, GColorWhite);
-  text_layer_set_text_alignment(s_temperature_layer, GTextAlignmentRight);
+  text_layer_set_text_alignment(s_temperature_layer, GTextAlignmentLeft);
   text_layer_set_font(s_temperature_layer, s_temperature_font);
   text_layer_set_text(s_temperature_layer, "");
 
   layer_add_child(parent_layer, text_layer_get_layer(s_temperature_layer));
 
-  s_conditions_id_layer = text_layer_create(GRect(0, 100, 68, 35));
+  s_conditions_id_layer = text_layer_create(GRect(gutter / 2, 106, 72 - gutter / 2, 30));
   text_layer_set_background_color(s_conditions_id_layer, GColorClear);
   text_layer_set_text_color(s_conditions_id_layer, GColorWhite);
   text_layer_set_text_alignment(s_conditions_id_layer, GTextAlignmentRight);
@@ -144,7 +145,7 @@ static void create_weather_layer(Layer *parent_layer) {
 
   layer_add_child(parent_layer, text_layer_get_layer(s_conditions_id_layer));
 
-  s_conditions_layer = text_layer_create(GRect(0, 130, 68, 35));
+  s_conditions_layer = text_layer_create(GRect(gutter / 2, 130, 72 - gutter / 2, 35));
   text_layer_set_background_color(s_conditions_layer, GColorClear);
   text_layer_set_text_color(s_conditions_layer, GColorWhite);
   text_layer_set_text_alignment(s_conditions_layer, GTextAlignmentRight);

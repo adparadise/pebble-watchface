@@ -29,7 +29,7 @@
         },
         {
             "type": "font",
-            "name": "FONT_ROBOTO_BOLD_32",
+            "name": "FONT_ROBOTO_BOLD_26",
             "file": "fonts/roboto-bold.ttf",
             "compatability": "2.7"
         }
