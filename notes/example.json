@@ -1,0 +1,39 @@
+{
+    "coord":{
+        "lon":-71.23,
+        "lat":42.36
+    },
+    "sys":{
+        "message":0.0164,
+        "country":"US",
+        "sunrise":1431250091,
+        "sunset":1431302066
+    },
+    "weather":[{
+        "id":802,
+        "main":"Clouds",
+        "description":"scattered clouds",
+        "icon":"03d"
+    }],
+    "base":"stations",
+    "main":{
+        "temp":301.169,
+        "temp_min":301.169,
+        "temp_max":301.169,
+        "pressure":1021.82,
+        "sea_level":1032.37,
+        "grnd_level":1021.82,
+        "humidity":50
+    },
+    "wind":{
+        "speed":3.11,
+        "deg":242.005
+    },
+    "clouds":{
+        "all":36
+    },
+    "dt":1431281564,
+    "id":4954380,
+    "name":"Waltham",
+    "cod":200
+}
