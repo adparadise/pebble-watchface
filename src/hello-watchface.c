@@ -8,8 +8,7 @@ static TextLayer *s_weather_status_text;
 static TextLayer *s_temperature_layer;
 static TextLayer *s_conditions_layer;
 static TextLayer *s_conditions_id_layer;
-static TextLayer *s_lat_text;
-static TextLayer *s_long_text;
+static TextLayer *s_metadata_text;
 static GFont s_time_font;
 static GFont s_temperature_font;
 
@@ -18,8 +17,7 @@ static GFont s_temperature_font;
 #define KEY_CONDITIONS_ID 2
 #define KEY_LOG 3
 #define KEY_PING 4
-#define KEY_LAT 5
-#define KEY_LONG 6
+#define KEY_METADATA 5
 
 static void click_config_provider(void *context) {
 
@@ -76,18 +74,11 @@ static void update_time() {
   text_layer_set_text(s_date_layer, date_buffer);
 }
 
-static void update_lat(char*message) {
-  static char lat_buffer[16];
+static void update_metadata(char*message) {
+  static char metadata_buffer[48];
 
-  snprintf(lat_buffer, sizeof(lat_buffer), "%s", message);
-  text_layer_set_text(s_lat_text, lat_buffer);
-}
-
-static void update_long(char*message) {
-  static char long_buffer[16];
-
-  snprintf(long_buffer, sizeof(long_buffer), "%s", message);
-  text_layer_set_text(s_long_text, long_buffer);
+  snprintf(metadata_buffer, sizeof(metadata_buffer), "%s", message);
+  text_layer_set_text(s_metadata_text, metadata_buffer);
 }
 
 static void create_weather_status_layer(Layer *parent_layer) {
@@ -102,23 +93,14 @@ static void create_weather_status_layer(Layer *parent_layer) {
 
   layer_add_child(s_weather_status_layer, text_layer_get_layer(s_weather_status_text));
 
-  s_lat_text = text_layer_create(GRect(4, 84 - coord_height, 68, coord_height));
-  text_layer_set_background_color(s_lat_text, GColorClear);
-  text_layer_set_text_color(s_lat_text, GColorWhite);
-  text_layer_set_text_alignment(s_lat_text, GTextAlignmentRight);
-  text_layer_set_font(s_lat_text, fonts_get_system_font(FONT_KEY_GOTHIC_14));
-  text_layer_set_text(s_lat_text, "");
+  s_metadata_text = text_layer_create(GRect(0, 84 - coord_height, 144, coord_height));
+  text_layer_set_background_color(s_metadata_text, GColorClear);
+  text_layer_set_text_color(s_metadata_text, GColorWhite);
+  text_layer_set_text_alignment(s_metadata_text, GTextAlignmentRight);
+  text_layer_set_font(s_metadata_text, fonts_get_system_font(FONT_KEY_GOTHIC_14));
+  text_layer_set_text(s_metadata_text, "");
 
-  layer_add_child(s_weather_status_layer, text_layer_get_layer(s_lat_text));
-
-  s_long_text = text_layer_create(GRect(76, 84 - coord_height, 68, coord_height));
-  text_layer_set_background_color(s_long_text, GColorClear);
-  text_layer_set_text_color(s_long_text, GColorWhite);
-  text_layer_set_text_alignment(s_long_text, GTextAlignmentRight);
-  text_layer_set_font(s_long_text, fonts_get_system_font(FONT_KEY_GOTHIC_14));
-  text_layer_set_text(s_long_text, "");
-
-  layer_add_child(s_weather_status_layer, text_layer_get_layer(s_long_text));
+  layer_add_child(s_weather_status_layer, text_layer_get_layer(s_metadata_text));
 
   layer_add_child(parent_layer, s_weather_status_layer);
 }
@@ -223,11 +205,8 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     case KEY_CONDITIONS_ID:
       update_conditions_id(t->value->cstring);
       break;
-    case KEY_LAT:
-      update_lat(t->value->cstring);
-      break;
-    case KEY_LONG:
-      update_long(t->value->cstring);
+    case KEY_METADATA:
+      update_metadata(t->value->cstring);
       break;
     default:
       APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);

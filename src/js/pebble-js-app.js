@@ -22,14 +22,16 @@ function xhrRequest (url, type, callback) {
     xhr.send();
 };
 
-function clearScreen () {
+function clearScreen (message) {
     var appMessage;
     appMessage = {
         'KEY_TEMPERATURE': '',
         'KEY_CONDITIONS': '',
         'KEY_CONDITIONS_ID': 0,
-        'KEY_LAT': '',
-        'KEY_LONG': ''
+        'KEY_METADATA': ''
+    };
+    if (message) {
+        appMessage.KEY_LOG = message;
     };
 
     Pebble.sendAppMessage(appMessage, successHandler, errorHandler);
@@ -52,8 +54,8 @@ function locationSuccess (pos) {
 
     function weatherResponseHandler (responseText) {
         var json, appMessage;
-        var temperature, conditions, conditionsId, locationName;
-        var time;
+        var temperature, conditions, conditionsId;
+        var time, locationName, metadata;
 
         try {
             json = JSON.parse(responseText);
@@ -71,14 +73,15 @@ function locationSuccess (pos) {
             time = '';
             time = new Date();
             time = time.toISOString();
-            time = time.slice(11, 19);
+            time = time.slice(11);
+
+            metadata = time + '  ' + locationName;
 
             appMessage = {
                 'KEY_TEMPERATURE': temperature,
                 'KEY_CONDITIONS': conditions,
                 'KEY_CONDITIONS_ID': conditionsId,
-                'KEY_LAT': time,
-                'KEY_LONG': locationName
+                'KEY_METADATA': metadata
             };
 
             Pebble.sendAppMessage(appMessage, successHandler, errorHandler);
@@ -98,11 +101,11 @@ function locationSuccess (pos) {
 
 // Send our lat/long to the app for display.
 function appPos (pos, message) {
-    var appMessage;
+    var metadata, appMessage;
 
+    metadata = stringify(pos.coords.latitude) + '  ' + stringify(pos.coords.longitude);
     appMessage = {
-        'KEY_LAT': stringify(pos.coords.latitude),
-        'KEY_LONG': stringify(pos.coords.longitude)
+        'KEY_METADATA': metadata
     };
     if (message) {
         appMessage.KEY_LOG = message;
@@ -150,8 +153,7 @@ function locationError(err) {
 }
 
 function getWeather() {
-    clearScreen();
-    appLog('location...');
+    clearScreen('location...');
 
     navigator.geolocation.getCurrentPosition(
         locationSuccess,
