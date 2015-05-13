@@ -11,6 +11,8 @@ static TextLayer *s_conditions_id_layer;
 static TextLayer *s_metadata_text;
 static GFont s_time_font;
 static GFont s_temperature_font;
+static GBitmap *s_underline_bitmap;
+static BitmapLayer *s_bitmap_layer;
 
 #define KEY_TEMPERATURE 0
 #define KEY_CONDITIONS 1
@@ -109,7 +111,7 @@ static void create_weather_layer(Layer *parent_layer) {
   int gutter = 16;
   s_temperature_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_BOLD_26));
 
-  s_temperature_layer = text_layer_create(GRect(72 + gutter / 2, 105, 72 - gutter, 30));
+  s_temperature_layer = text_layer_create(GRect(72 + gutter / 2, 100, 72 - gutter, 30));
   text_layer_set_background_color(s_temperature_layer, GColorClear);
   text_layer_set_text_color(s_temperature_layer, GColorWhite);
   text_layer_set_text_alignment(s_temperature_layer, GTextAlignmentLeft);
@@ -118,19 +120,20 @@ static void create_weather_layer(Layer *parent_layer) {
 
   layer_add_child(parent_layer, text_layer_get_layer(s_temperature_layer));
 
-  s_conditions_id_layer = text_layer_create(GRect(gutter / 2, 106, 72 - gutter / 2, 30));
+  s_conditions_id_layer = text_layer_create(GRect(72 + gutter / 2, 140, 72 - gutter / 2, 30));
   text_layer_set_background_color(s_conditions_id_layer, GColorClear);
   text_layer_set_text_color(s_conditions_id_layer, GColorWhite);
-  text_layer_set_text_alignment(s_conditions_id_layer, GTextAlignmentRight);
-  text_layer_set_font(s_conditions_id_layer, s_temperature_font);
+  text_layer_set_text_alignment(s_conditions_id_layer, GTextAlignmentLeft);
+  text_layer_set_font(s_conditions_id_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
   text_layer_set_text(s_conditions_id_layer, "");
 
   layer_add_child(parent_layer, text_layer_get_layer(s_conditions_id_layer));
 
-  s_conditions_layer = text_layer_create(GRect(gutter / 2, 130, 72 - gutter / 2, 35));
+  s_conditions_layer = text_layer_create(GRect(72 + gutter / 2, 120, 72 - gutter / 2, 35));
   text_layer_set_background_color(s_conditions_layer, GColorClear);
   text_layer_set_text_color(s_conditions_layer, GColorWhite);
-  text_layer_set_text_alignment(s_conditions_layer, GTextAlignmentRight);
+  text_layer_set_text_alignment(s_conditions_layer, GTextAlignmentLeft);
+  text_layer_set_font(s_conditions_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
   text_layer_set_text(s_conditions_layer, "");
 
   layer_add_child(parent_layer, text_layer_get_layer(s_conditions_layer));
@@ -140,7 +143,7 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
 
   window_set_background_color(window, GColorBlack);
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_BOLD_52));
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_PERMANENT_MARKER_52));
 
   s_time_layer = text_layer_create(GRect(0, 0, 144, 55));
   text_layer_set_background_color(s_time_layer, GColorClear);
@@ -153,10 +156,15 @@ static void window_load(Window *window) {
   s_date_layer = text_layer_create(GRect(0, 55, 144, 25));
   text_layer_set_background_color(s_date_layer, GColorClear);
   text_layer_set_text_color(s_date_layer, GColorWhite);
-  text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
+  text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24));
   text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
 
   layer_add_child(window_layer, text_layer_get_layer(s_date_layer));
+
+  s_underline_bitmap = gbitmap_create_with_resource(RESOURCE_ID_UNDERLINE_IMAGE);
+  s_bitmap_layer = bitmap_layer_create(GRect(0, 80, 144, 40));
+  bitmap_layer_set_bitmap(s_bitmap_layer, s_underline_bitmap);
+  layer_add_child(window_layer, bitmap_layer_get_layer(s_bitmap_layer));
 
   create_weather_status_layer(window_layer);
   create_weather_layer(window_layer);
@@ -236,17 +244,26 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 
 static void window_unload(Window *window) {
   text_layer_destroy(s_time_layer);
+  layer_destroy(s_weather_status_layer);
+  text_layer_destroy(s_date_layer);
+  text_layer_destroy(s_weather_status_text);
+  text_layer_destroy(s_temperature_layer);
+  text_layer_destroy(s_conditions_layer);
+  text_layer_destroy(s_conditions_id_layer);
+  text_layer_destroy(s_metadata_text);
   fonts_unload_custom_font(s_time_font);
   fonts_unload_custom_font(s_temperature_font);
+  gbitmap_destroy(s_underline_bitmap);
+  bitmap_layer_destroy(s_bitmap_layer);
 }
 
 static void init(void) {
   window = window_create();
   window_set_click_config_provider(window, click_config_provider);
   window_set_window_handlers(window, (WindowHandlers) {
-    .load = window_load,
-    .unload = window_unload,
-  });
+      .load = window_load,
+        .unload = window_unload,
+        });
 
   app_message_register_inbox_received(inbox_received_callback);
   app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());

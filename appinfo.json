@@ -22,8 +22,8 @@
     "media": [
         {
             "type": "font",
-            "name": "FONT_ROBOTO_BOLD_52",
-            "file": "fonts/roboto-bold.ttf",
+            "name": "FONT_PERMANENT_MARKER_52",
+            "file": "fonts/permanent-marker.ttf",
             "compatability": "2.7"
         },
         {
@@ -31,6 +31,11 @@
             "name": "FONT_ROBOTO_BOLD_26",
             "file": "fonts/roboto-bold.ttf",
             "compatability": "2.7"
+        },
+        {
+            "type": "png",
+            "name": "UNDERLINE_IMAGE",
+            "file": "underline.png"
         }
     ]
   },
